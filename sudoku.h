@@ -14,8 +14,8 @@ class Sudoku{
   private:
 	int map[81];
     int size;
-	int x[9*9*9*9*9*4];
-	int v[9*9*9];
+	int x[9*9*9*9*9*4+100];
+	int v[9*9*9+10];
 	struct DLX_node{
 		int U,D,L,R; //上下左右指標 
 		int num; //num存該column object中有多少個 1
@@ -23,8 +23,8 @@ class Sudoku{
 	};
 	DLX_node dlx[9*9*9*9*9*4]; //所有0-1矩陣節點
     int head; //指向整個矩陣的開頭 
-	int h[9*9*9]; //
-	int ans[81];
+	int h[9*9*9+10]; //
+	int ans[500];
 	void initialization();
     void remove(int col);
 	void resume(int col);
