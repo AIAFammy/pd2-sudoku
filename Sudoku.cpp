@@ -85,7 +85,7 @@ void Sudoku::solve(){
 		printf("1\n");
 		for(int i=0; i<81; i++)
 		{
-			printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
+			printf("%d%c",output[i],(i+1)%9==0?'\n':' ');
 		}
 		printf("\n");
 	}
@@ -330,7 +330,7 @@ int Sudoku::dfs(int time){
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
-		    map[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
+		    output[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
 		}
 		return 1;
 	}
