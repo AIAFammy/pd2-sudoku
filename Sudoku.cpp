@@ -319,12 +319,12 @@ void Sudoku::resume(int col){
 }
 
 int Sudoku::dfs(int time){
+	if(flag>1) return 2; //多組解直接回傳到最上層結束
 	if(dlx[head].R == head)   	
 	{
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
 	    flag++; //有解將flag+1;
-		if(flag>1) return 2;//有多組解應結束程式
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
@@ -373,7 +373,6 @@ int Sudoku::dfs(int time){
 		i = dlx[i].D;
 	}
 	resume(col); //把這個選錯的column object回復回來
-	if(flag>1) return 2;
 	return 0; //傳回上層失敗，跳回上層繼續往下一個試
     //直到最外層也傳回失敗表示無解
 }
