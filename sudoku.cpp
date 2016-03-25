@@ -19,14 +19,13 @@ void Sudoku::readIn(){
 	int i;
 	for(i=0;i<81;i++)
 		scanf("%d",&map[i]);
-	printf("done the readIn\n");
 	return;
 }
 
 void Sudoku::solve(){
 	int row,col1,col2,col3,col4;
 	initialization(); //初始化矩陣
-	memset(v,0,sizeof(v));
+	memset(exist,0,sizeof(exist));
 	for(int i=0,k=0;i<9;++i) //k為0~81之位置，i,j為k的對應列行值
 	{	
 		for(int j=0;j<9;++j,++k)
@@ -45,14 +44,13 @@ void Sudoku::solve(){
 				insert(row, col3);
 				insert(row, col4);
 				//紀錄已確定值
-				v[col1] = 1;
-				v[col2] = 1;
-				v[col3] = 1;
-				v[col4] = 1;
+				exist[col1] = 1;
+				exist[col2] = 1;
+				exist[col3] = 1;
+				exist[col4] = 1;
 			}
 		}
 	}
-	printf("done setup known number\n");
 	//插入一般待解的'1'進入0-1矩陣
 	for(int i=0;i<9;i++)
 	{
@@ -65,8 +63,8 @@ void Sudoku::solve(){
                col2 = 9*9 + i*9 + k; 
                col3 = 9*9*2 + j*9 + k;
                col4 = 9*9*3 + ((i/3)*3+(j/3))*9 + k;
-			   //若為題目給的確定值，跳過
-			   if((v[col1]||v[col2]||v[col3]||v[col4]))
+			   //若為題目給的確定值，這一格不須插入1~9的'1'節點，跳去下一格
+			   if((exist[col1]||exist[col2]||exist[col3]||exist[col4]))
 			   {
 				   continue;
 			   }
@@ -77,8 +75,18 @@ void Sudoku::solve(){
 			}
 		}
 	}
-	printf("start dfs\n");
-	if(!dfs(0)) printf("0\n"); //傳回false，無解
+	if(dfs(0)==0) printf("0\n"); //無解
+	else if(flag>1) printf("2\n"); //多組解
+	else //有解
+	{
+		printf("1\n");
+		for(int i=0; i<81; i++)
+		{
+			printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
+		}
+		printf("\n");
+	}
+
 }
 
 void Sudoku::changeNum(int a, int b){
@@ -111,6 +119,7 @@ void Sudoku::transform(){
 
 void Sudoku::initialization(){
 	head = 0;
+	flag = 0; //初始化為無解
 	for(int i=0; i<=9*9*4; i++) //初始化column object的dlx node
 	{
 		dlx[i].num = 0; //1的個數初始化為0
@@ -119,15 +128,14 @@ void Sudoku::initialization(){
 		dlx[i].R = i+1;//column object的左右指標串起來
 		dlx[i].L = i-1;
 	}
-	size = 9*9*4;
-	dlx[9*9*4].R = 0; //最後面的指標拉回指向開頭
+	size = 9*9*4; //記錄前9*9*4的interger為column object使用
+	dlx[9*9*4].R = 0; //最後面的指標拉回指向head
 	int temp = 9*9*9;
-	while(temp>=0)
+	while(temp>=0) //將0~9*9*9的列開頭全部先指向空
 	{
-		h[temp] = -1;
+		h[temp] = -1; 
 		temp--;
 	}
-	printf("done initialization\n");
 	return;
 }
 
@@ -193,23 +201,19 @@ void Sudoku::resume(int col){
 	return;
 }
 
-bool Sudoku::dfs(int time){
+int Sudoku::dfs(int time){
 	if(dlx[head].R == head)   	
 	{
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
-	//也就是已經都成功的選擇，即已有解=>輸出
-	   for(int i=0; i<time; i++)
-	   {
-		   //將所紀錄之ans[]位置還原
-		   printf("%d\n",ans[i]);
-		   map[(x[ans[i]]-1)/9 + 1] = (x[ans[i]]-1)/9 + 1;
-	   }
-	   for(int i=0; i<81; i++)
-	   {
-		   printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
-	   }
-	   printf("\n");
-	   return true; //有解回傳true
+	//也就是已經都成功的選擇，即已有解
+	    flag++; //有解將flag+1;
+		if(flag>1) return 2;//有多組解應結束程式
+		for(int i=0; i<time; i++)
+	    {
+		    //將所紀錄之ans[]位置還原
+		    map[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
+		}
+		return 1;
 	}
 	//以下便為尚有column object可以選擇的情況
 	int col;
@@ -227,10 +231,10 @@ bool Sudoku::dfs(int time){
 	//現在擁有最少'1'個數之column object編號:col
 	//printf("the %d time choose %d col remove\n",time,col);
 	remove(col);  //暫時移除
-	i = dlx[col].D; //i是移除後下方的'1'節點
+	i = dlx[col].D; //i是移除後下方的'1'節點，去往左右找有'1'之節點做移除
 	while(i != col)
 	{
-		ans[time] = i; //記錄這一次所選之填入'1'之位置，即是答案
+		ans[time] = i; //記錄這一次所選之填入'1'之節點，即是答案
 		int j = dlx[i].R;
 		while(j != i)
 		{
@@ -238,9 +242,9 @@ bool Sudoku::dfs(int time){
 			j = dlx[j].R;
 		}
 		//移除完不能被選擇的選項了
-		if(dfs(time+1)) //繼續往下做下一次的dfs
+		if(dfs(time+1)==1) //繼續往下做下一次的dfs
 		{
-			return true; //若都傳為true，則往上傳回true，表示有解
+			return 1; //若都傳為true，則往上傳回true，表示有解
 		}
 		//若其中一層false，則為選錯column object
 		j = dlx[i].L;
@@ -252,7 +256,8 @@ bool Sudoku::dfs(int time){
 		i = dlx[i].D;
 	}
 	resume(col); //把這個選錯的column object回復回來
-	return false; //傳回上層失敗，跳回上層繼續往下一個試
+	if(flag>1) return 2;
+	return 0; //傳回上層失敗，跳回上層繼續往下一個試
     //直到最外層也傳回失敗表示無解
 }
 
@@ -260,7 +265,7 @@ void Sudoku::insert(int row, int col){
 	int temp = ++size; //指向已被使用的size範圍後面下一個
 	dlx[temp].colobj = col; //該點隸屬於編號col 的 column object
 	dlx[col].num++; //'1'的節點插入多一個
-	x[temp] = row;
+	rowof[temp] = row;
 	dlx[temp].D = dlx[col].D; //將其向下指標指向原本指向的節點
     dlx[dlx[col].D].U = temp; //再把指向的那個節點往回指
 	dlx[temp].U = col; //將其向上的指標指向column object
@@ -268,20 +273,20 @@ void Sudoku::insert(int row, int col){
 	//即完成節點之插入
 	if(h[row] < 0)
 	{
-		//h[]<0表示為先前初始化過之節點
-		//將其列設定值後，簡易的設定以拉好的指標即可
+		//h[]<0表示為第一次插入該列，自己為該列的開頭
 		h[row] = temp; 
 		dlx[temp].L = temp;
 		dlx[temp].R = temp;
 	}
 	else
 	{
-		//為新的節點需重新拉指標
+		//先前已有插入，將其與開頭連接
 		dlx[temp].R = dlx[h[row]].R; //先將其向右指標，設成列頭向右指的節點
 		dlx[dlx[h[row]].R].L = temp; //再把指向的那個節點左指標指回
 		dlx[temp].L = h[row]; //將其向左指標指向列頭
 		dlx[h[row]].R = temp; //再把列頭右指標指回
 	}
+	return;
 }
 	
 
