@@ -77,7 +77,8 @@ void Sudoku::solve(){
 			}
 		}
 	}
-	if(dfs(0)==0) printf("0\n"); //無解
+	dfs(0);
+	if(flag==0) printf("0\n"); //無解
 	else if(flag>1) printf("2\n"); //多組解
 	else //有解
 	{
@@ -359,10 +360,7 @@ int Sudoku::dfs(int time){
 			j = dlx[j].R;
 		}
 		//移除完不能被選擇的選項了
-		if(dfs(time+1)==1) //繼續往下做下一次的dfs
-		{
-			return 1; //若都傳為true，則往上傳回true，表示有解
-		}
+		dfs(time+1); //繼續往下做下一次的dfs
 		//若其中一層false，則為選錯column object
 		j = dlx[i].L;
 		while(j != i)
