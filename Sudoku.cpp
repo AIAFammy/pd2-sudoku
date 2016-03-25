@@ -34,7 +34,7 @@ void Sudoku::solve(){
 		{
 			if(map[k]>0) //題目給的確定數字
 			{
-				//將其轉換成0-1矩陣的格式
+				//將其轉換成0-1矩陣的'1'節點
 				row = (i*9+j)*9 + map[k]; //其對應之列值
 				col1 = i*9 + j + 1; //一格只能有一個數字
 				col2 = 9*9 + i*9 + map[k]; //一列只能出現一次
@@ -65,7 +65,7 @@ void Sudoku::solve(){
                col2 = 9*9 + i*9 + k; 
                col3 = 9*9*2 + j*9 + k;
                col4 = 9*9*3 + ((i/3)*3+(j/3))*9 + k;
-			   //若為題目給的確定值，這一格不須插入1~9的'1'節點，跳去下一格
+			   //若為題目給的確定值，這一格不須插入1~9的'1'節點
 			   if((exist[col1]||exist[col2]||exist[col3]||exist[col4]))
 			   {
 				   continue;
@@ -348,7 +348,6 @@ int Sudoku::dfs(int time){
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
 	    flag++; //有解將flag+1;
-		if(flag>1) return 2;
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
@@ -426,13 +425,3 @@ void Sudoku::insert(int row, int col){
 	return;
 }
 	
-
-
-
-
-
-
-
-
-
-
