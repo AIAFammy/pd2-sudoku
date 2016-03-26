@@ -348,7 +348,6 @@ int Sudoku::dfs(int time){
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
 	    flag++; //有解將flag+1;i
-		if(flag>1) return 2;
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
