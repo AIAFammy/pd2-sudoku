@@ -52,7 +52,6 @@ class Sudoku{
     int head; //指向整個矩陣的開頭 
 	int h[9*9*9+10]; //
 	int ans[500];
-	int output[81];
 	void initialization();
     void remove(int col);
 	void resume(int col);

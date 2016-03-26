@@ -85,7 +85,7 @@ void Sudoku::solve(){
 		printf("1\n");
 		for(int i=0; i<81; i++)
 		{
-			printf("%d%c",output[i],(i+1)%9==0?'\n':' ');
+			printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
 		}
 		printf("\n");
 	}
@@ -352,7 +352,7 @@ int Sudoku::dfs(int time){
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
-		    output[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
+		    map[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
 		}
 		return 1;
 	}
@@ -385,7 +385,6 @@ int Sudoku::dfs(int time){
 		//移除完不能被選擇的選項了
 		dfs(time+1); //繼續往下做下一次的dfs
 		//若其中一層false，則為選錯column object
-		if(flag>1) return 2;
 		j = dlx[i].L;
 		while(j != i)
 		{
