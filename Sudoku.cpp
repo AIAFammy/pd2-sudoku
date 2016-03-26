@@ -85,7 +85,7 @@ void Sudoku::solve(){
 		printf("1\n");
 		for(int i=0; i<81; i++)
 		{
-			printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
+			printf("%d%c",output[i],(i+1)%9==0?'\n':' ');
 		}
 		printf("\n");
 	}
@@ -347,11 +347,11 @@ int Sudoku::dfs(int time){
 	{
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
-	    flag++; //有解將flag+1;i
+	    flag++; //有解將flag+1;
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
-		    map[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
+		    output[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
 		}
 		return 1;
 	}
@@ -396,6 +396,7 @@ int Sudoku::dfs(int time){
 	return 0; //傳回上層失敗，跳回上層繼續往下一個試
     //直到最外層也傳回失敗表示無解
 }
+
 
 void Sudoku::insert(int row, int col){
 	int temp = ++size; //指向已被使用的size範圍後面下一個
