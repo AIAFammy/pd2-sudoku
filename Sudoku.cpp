@@ -271,7 +271,7 @@ void Sudoku::initialization(){
 	size = 9*9*4; //記錄前9*9*4的interger為column object使用
 	dlx[9*9*4].R = 0; //最後面的指標拉回指向head
 	int temp = 9*9*9;
-	while(temp>=9*9*4-1) //將0~9*9*9的列開頭全部先指向空
+	while(temp>=0) //將0~9*9*9的列開頭全部先指向空
 	{
 		h[temp] = -1; 
 		temp--;
@@ -397,7 +397,6 @@ int Sudoku::dfs(int time){
     //直到最外層也傳回失敗表示無解
 }
 
-
 void Sudoku::insert(int row, int col){
 	int temp = ++size; //指向已被使用的size範圍後面下一個
 	dlx[temp].colobj = col; //該點隸屬於編號col 的 column object
@@ -425,4 +424,3 @@ void Sudoku::insert(int row, int col){
 	}
 	return;
 }
-	
