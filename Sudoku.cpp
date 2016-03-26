@@ -244,11 +244,11 @@ void Sudoku::flip(int n){
 
 void Sudoku::transform(){
 	srand(time(NULL));
-	//changeNum(rand()%9+1, rand()%9+1);
+	changeNum(rand()%9+1, rand()%9+1);
 	changeRow(rand()%3, rand()%3);
-	//changeCol(rand()%3, rand()%3);
-	//rotate(rand()%101);
-	//flip(rand()%2);
+	changeCol(rand()%3, rand()%3);
+	rotate(rand()%101);
+	flip(rand()%2);
     for(int i=0;i<81;i++)  printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
     return;
 }
