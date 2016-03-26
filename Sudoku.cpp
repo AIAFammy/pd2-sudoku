@@ -244,11 +244,11 @@ void Sudoku::flip(int n){
 
 void Sudoku::transform(){
 	srand(time(NULL));
-	changeNum(rand()%9+1, rand()%9+1);
+	//changeNum(rand()%9+1, rand()%9+1);
 	changeRow(rand()%3, rand()%3);
-	changeCol(rand()%3, rand()%3);
-	rotate(rand()%101);
-	flip(rand()%2);
+	//changeCol(rand()%3, rand()%3);
+	//rotate(rand()%101);
+	//flip(rand()%2);
     for(int i=0;i<81;i++)  printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
     return;
 }
@@ -271,7 +271,7 @@ void Sudoku::initialization(){
 	size = 9*9*4; //記錄前9*9*4的interger為column object使用
 	dlx[9*9*4].R = 0; //最後面的指標拉回指向head
 	int temp = 9*9*9;
-	while(temp>=0) //將0~9*9*9的列開頭全部先指向空
+	while(temp>=9*9*4-1) //將0~9*9*9的列開頭全部先指向空
 	{
 		h[temp] = -1; 
 		temp--;
@@ -347,7 +347,8 @@ int Sudoku::dfs(int time){
 	{
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
-	    flag++; //有解將flag+1;
+	    flag++; //有解將flag+1;i
+		if(flag>1) return 2;
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
@@ -384,6 +385,7 @@ int Sudoku::dfs(int time){
 		//移除完不能被選擇的選項了
 		dfs(time+1); //繼續往下做下一次的dfs
 		//若其中一層false，則為選錯column object
+		if(flag>1) return 2;
 		j = dlx[i].L;
 		while(j != i)
 		{
