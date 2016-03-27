@@ -23,12 +23,11 @@ class Sudoku{
 	};
 	DLX_node dlx[9*9*9*9*9*4+100]; //所有0-1矩陣節點
     int head; //指向整個矩陣的開頭 
-	int h[9*9*9+10]; //
 	int ans[500];
 	int output[81];
 	void initialization();
     void remove(int col);
 	void resume(int col);
 	int dfs(int time); //成功傳回1，失敗傳回0，已有多組解傳回2
-	void insert(int row, int col); //插入稀疏矩陣'1'節點
+	void insert(int row, int col1, int col2, int col3, int col4); //插入稀疏矩陣'1'節點
 };  

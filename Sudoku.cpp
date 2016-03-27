@@ -41,10 +41,7 @@ void Sudoku::solve(){
 				col3 = 9*9*2 + j*9 + map[k]; //一行只能出現一次
 				col4 = 9*9*3 + ((i/3)*3+(j/3))*9 + map[k]; //一個block只能出現一次
 				//再將其插入0-1矩陣中
-				insert(row, col1);
-				insert(row, col2);
-				insert(row, col3);
-				insert(row, col4);
+				insert(row, col1, col2, col3, col4);
 				//紀錄已確定值
 				exist[col1] = 1;
 				exist[col2] = 1;
@@ -70,10 +67,7 @@ void Sudoku::solve(){
 			   {
 				   continue;
 			   }
-			   insert(row, col1);
-			   insert(row, col2);
-			   insert(row, col3);
-			   insert(row, col4);
+			   insert(row, col1, col2, col3, col4);
 			}
 		}
 	}
@@ -270,12 +264,6 @@ void Sudoku::initialization(){
 	}
 	size = 9*9*4; //記錄前9*9*4的interger為column object使用
 	dlx[9*9*4].R = 0; //最後面的指標拉回指向head
-	int temp = 9*9*9;
-	while(temp>=0) //將0~9*9*9的列開頭全部先指向空
-	{
-		h[temp] = -1; 
-		temp--;
-	}
 	return;
 }
 
@@ -341,7 +329,7 @@ void Sudoku::resume(int col){
 	return;
 }
 
-int Sudoku::dfs(int time){
+int Sudoku::dfs(int time){ 
 	if(flag>1) return 2; //多組解直接回傳到最上層結束
 	if(dlx[head].R == head)   	
 	{
@@ -397,30 +385,47 @@ int Sudoku::dfs(int time){
     //直到最外層也傳回失敗表示無解
 }
 
-void Sudoku::insert(int row, int col){
-	int temp = ++size; //指向已被使用的size範圍後面下一個
-	dlx[temp].colobj = col; //該點隸屬於編號col 的 column object
-	dlx[col].num++; //'1'的節點插入多一個
-	rowof[temp] = row;
-	dlx[temp].D = dlx[col].D; //將其向下指標指向原本指向的節點
-    dlx[dlx[col].D].U = temp; //再把指向的那個節點往回指
-	dlx[temp].U = col; //將其向上的指標指向column object
-	dlx[col].D = temp; //再把column object也往下回指
-	//即完成節點之插入
-	if(h[row] < 0)
-	{
-		//h[]<0表示為第一次插入該列，自己為該列的開頭
-		h[row] = temp; 
-		dlx[temp].L = temp;
-		dlx[temp].R = temp;
-	}
-	else
-	{
-		//先前已有插入，將其與開頭連接
-		dlx[temp].R = dlx[h[row]].R; //先將其向右指標，設成列頭向右指的節點
-		dlx[dlx[h[row]].R].L = temp; //再把指向的那個節點左指標指回
-		dlx[temp].L = h[row]; //將其向左指標指向列頭
-		dlx[h[row]].R = temp; //再把列頭右指標指回
-	}
+void Sudoku::insert(int row, int col1,int col2,int col3,int col4){
+	int temp1 = ++size; //指向已被使用的size範圍後面下一個
+	int temp2 = ++size;
+	int temp3 = ++size;
+	int temp4 = ++size;
+	dlx[temp1].colobj = col1; //該點隸屬於編號col 的 column object
+	dlx[temp2].colobj = col2;
+	dlx[temp3].colobj = col3;
+	dlx[temp4].colobj = col4;
+	dlx[col1].num++; //'1'的節點插入多一個
+	dlx[col2].num++;
+	dlx[col3].num++;
+	dlx[col4].num++;
+	rowof[temp1] = row;
+	rowof[temp2] = row;
+	rowof[temp3] = row;
+	rowof[temp4] = row;
+	dlx[temp1].D = dlx[col1].D; //將其向下指標指向原本指向的節點
+	dlx[temp2].D = dlx[col2].D;
+	dlx[temp3].D = dlx[col3].D;
+	dlx[temp4].D = dlx[col4].D;
+    dlx[dlx[col1].D].U = temp1; //再把指向的那個節點往回指
+	dlx[dlx[col2].D].U = temp2; 
+	dlx[dlx[col3].D].U = temp3; 
+	dlx[dlx[col4].D].U = temp4; 
+	dlx[temp1].U = col1; //將其向上的指標指向column object
+	dlx[temp2].U = col2;
+	dlx[temp3].U = col3;
+	dlx[temp4].U = col4;
+	dlx[col1].D = temp1; //再把column object也往下回指
+	dlx[col2].D = temp2; 
+	dlx[col3].D = temp3; 
+	dlx[col4].D = temp4; 
+	//差左右指標未串連
+	dlx[temp1].R = temp2;
+	dlx[temp2].R = temp3;
+	dlx[temp3].R = temp4;
+	dlx[temp4].R = temp1;
+	dlx[temp1].L = temp4;
+	dlx[temp2].L = temp1;
+	dlx[temp3].L = temp2;
+	dlx[temp4].L = temp3;
 	return;
 }
