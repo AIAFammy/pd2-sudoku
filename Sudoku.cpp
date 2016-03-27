@@ -18,7 +18,7 @@ void Sudoku::giveQuestion(){
 
 void Sudoku::readIn(){
 	int i;
-	for(i=0;i<81;i++)
+	for(i=0;i<81;++i)
 		scanf("%d",&map[i]);
 	return;
 }
@@ -45,12 +45,12 @@ void Sudoku::solve(){
 		}
 	}
 	//插入一般待解的'1'進入0-1矩陣
-	for(int i=0;i<9;i++)
+	for(int i=0;i<9;++i)
 	{
-		for(int j=0;j<9;j++)
+		for(int j=0;j<9;++j)
 		{
 			if(exist[i][j] == 1) continue;
-			for(int k=1;k<=9;k++)
+			for(int k=1;k<=9;++k)
 			{
 			   row = (i*9+j)*9 + k;
                col1 = i*9 + j + 1; 
@@ -67,11 +67,10 @@ void Sudoku::solve(){
 	else //有解
 	{
 		printf("1\n");
-		for(int i=0; i<81; i++)
+		for(int i=0; i<81; ++i)
 		{
 			printf("%d%c",output[i],(i+1)%9==0?'\n':' ');
 		}
-		printf("\n");
 	}
 
 }
@@ -79,13 +78,13 @@ void Sudoku::solve(){
 void Sudoku::changeNum(int a, int b){ 
 	int temp[81];
 	if(a==b) return;
-	for(int i=0;i<81;i++)
+	for(int i=0;i<81;++i)
 	{
 		if(map[i]==a) temp[i]=b;
 		else if(map[i]==b) temp[i]=a;
 		else temp[i]=map[i];
 	}
-	for(int i=0;i<81;i++) map[i]=temp[i];
+	for(int i=0;i<81;++i) map[i]=temp[i];
 	return;
 }
 
@@ -94,36 +93,36 @@ void Sudoku::changeRow(int a, int b){
 	if(a==b) return;
 	if((a==0&&b==1)||(a==1&&b==0))
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 		{
 			if(i<27) temp[i+27]=map[i];
 			else if(i<54) temp[i-27]=map[i];
 			else temp[i]=map[i];
 		}
-		for(int i=0;i<81;i++) map[i]=temp[i];
+		for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 
 	}
 	if((a==0&&b==2)||(a==2&&b==0))
 	{
-	    for(int i=0;i<81;i++)
+	    for(int i=0;i<81;++i)
 	    {
 	        if(i<27) temp[i+54]=map[i];
 	        else if(i<54) temp[i]=map[i];
 	        else temp[i-54]=map[i];
 	    }
-		for(int i=0;i<81;i++) map[i]=temp[i];
+		for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 	if((a==2&&b==1)||(a==1&&b==2))
 	{
-	    for(int i=0;i<81;i++)
+	    for(int i=0;i<81;++i)
 	    {
 	        if(i<27) temp[i]=map[i];
 	        else if(i<54) temp[i+27]=map[i];
 	        else temp[i-27]=map[i];
 	    }
-		for(int i=0;i<81;i++) map[i]=temp[i];
+		for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 }
@@ -133,35 +132,35 @@ void Sudoku::changeCol(int a, int b){
 	if(a==b) return;
 	if((a==0&&b==1)||(a==1&&b==0))
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 		{
 			if((i%9)<3) temp[i]=map[i+3];
 			else if((i%9)<6) temp[i]=map[i-3];
 			else temp[i]=map[i];
 		}
-		for(int i=0;i<81;i++) map[i]=temp[i];
+		for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 	if((a==0&&b==2)||(a==2&&b==0))
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 	    {
 	        if((i%9)<3) temp[i]=map[i+6];
 	        else if((i%9)<6) temp[i]=map[i];
 	        else temp[i]=map[i-6];
 	    }
-	    for(int i=0;i<81;i++) map[i]=temp[i];
+	    for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 	if((a==2&&b==1)||(a==1&&b==2))
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 	    {
 	        if((i%9)<3) temp[i]=map[i];
 	        else if((i%9)<6) temp[i]=map[i+3];
 	        else temp[i]=map[i-3];
 	    }
-	    for(int i=0;i<81;i++) map[i]=temp[i];
+	    for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 }
@@ -169,10 +168,10 @@ void Sudoku::changeCol(int a, int b){
 void Sudoku::rotate(int n){
 	int temp[81],save[81];
 	if(n%4==0) return;
-	for(int i=0;i<81;i++) save[i]=map[i];
-	for(int k=0;k<(n%4);k++) //轉k次90度
+	for(int i=0;i<81;++i) save[i]=map[i];
+	for(int k=0;k<(n%4);++k) //轉k次90度
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 		{
 			temp[i]=save[(i/9)+9*(8-(i%9))];
 			/*
@@ -182,7 +181,7 @@ void Sudoku::rotate(int n){
 			 *if((i%9)==8) temp[i]=save[(i/9)+0];
 			 */
         }
-		for(int i=0;i<81;i++) save[i]=temp[i];
+		for(int i=0;i<81;++i) save[i]=temp[i];
 	}
 	for(int i=0;i<81;i++) map[i]=temp[i];
 	return;
@@ -192,7 +191,7 @@ void Sudoku::flip(int n){
 	int temp[81];
 	if(n==0)
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 		{
 			if(i<9) temp[i]=map[i+72];
 			else if(i<18) temp[i]=map[i+54];
@@ -204,12 +203,12 @@ void Sudoku::flip(int n){
 			else if(i<72) temp[i]=map[i-54];
             else temp[i]=map[i-72];
 		}
-		for(int i=0;i<81;i++) map[i]=temp[i];
+		for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 	else
 	{
-		for(int i=0;i<81;i++)
+		for(int i=0;i<81;++i)
 		{
 			if(i%9==0) temp[i]=map[i+8];
 			else if(i%9==1) temp[i]=map[i+6];
@@ -221,19 +220,19 @@ void Sudoku::flip(int n){
 			else if(i%9==7) temp[i]=map[i-6];
 			else temp[i]=map[i-8];
 		}
-		for(int i=0;i<81;i++) map[i]=temp[i];
+		for(int i=0;i<81;++i) map[i]=temp[i];
 		return;
 	}
 }
 
 void Sudoku::transform(){
 	srand(time(NULL));
-	changeNum(rand()%9+1, rand()%9+1);
+	//changeNum(rand()%9+1, rand()%9+1);
 	changeRow(rand()%3, rand()%3);
-	changeCol(rand()%3, rand()%3);
-	rotate(rand()%101);
-	flip(rand()%2);
-    for(int i=0;i<81;i++)  printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
+	//changeCol(rand()%3, rand()%3);
+	//rotate(rand()%101);
+	//flip(rand()%2);
+    for(int i=0;i<81;++i)  printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
     return;
 }
 
@@ -244,7 +243,7 @@ void Sudoku::transform(){
 inline void Sudoku::initialization(){
 	head = 0;
 	flag = 0; //初始化為無解
-	for(int i=0; i<=9*9*4; i++) //初始化column object的dlx node
+	for(int i=0; i<=9*9*4; ++i) //初始化column object的dlx node
 	{
 		dlx[i].num = 0; //1的個數初始化為0
 		dlx[i].U = i; //column object的上下指標初始化指回自己
@@ -326,7 +325,7 @@ void Sudoku::dfs(int time){
 	//也就是已經都成功的選擇，即已有解
 		if(flag>1) return;
 		flag++; //有解將flag+1
-		for(int i=0; i<time; i++)
+		for(int i=0; i<time; ++i)
 	    {
 		    //將所紀錄之ans[]位置還原
 		    output[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
