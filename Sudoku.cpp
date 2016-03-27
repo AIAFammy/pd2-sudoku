@@ -376,7 +376,7 @@ int Sudoku::dfs(int time){
     //直到最外層也傳回失敗表示無解
 }
 
-void Sudoku::insert(int row, int col1,int col2,int col3,int col4){
+inline void Sudoku::insert(int row, int col1,int col2,int col3,int col4){
 	int temp1 = ++size; //指向已被使用的size範圍後面下一個
 	int temp2 = ++size;
 	int temp3 = ++size;
