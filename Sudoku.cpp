@@ -1,5 +1,4 @@
 #include<stdio.h>
-#include<cstring>
 #include<ctime>
 #include<cstdlib>
 #include"Sudoku.h"
@@ -27,13 +26,13 @@ void Sudoku::readIn(){
 void Sudoku::solve(){
 	int row,col1,col2,col3,col4;
 	initialization(); //初始化矩陣
-	memset(exist,0,sizeof(exist));
 	for(int i=0,k=0;i<9;++i) //k為0~81之位置，i,j為k的對應列行值
 	{	
 		for(int j=0;j<9;++j,++k)
 		{
 			if(map[k]>0) //題目給的確定數字
 			{
+				exist[i][j] = 1;
 				//將其轉換成0-1矩陣的'1'節點
 				row = (i*9+j)*9 + map[k]; //其對應之列值
 				col1 = i*9 + j + 1; //一格只能有一個數字
@@ -42,11 +41,6 @@ void Sudoku::solve(){
 				col4 = 9*9*3 + ((i/3)*3+(j/3))*9 + map[k]; //一個block只能出現一次
 				//再將其插入0-1矩陣中
 				insert(row, col1, col2, col3, col4);
-				//紀錄已確定值
-				exist[col1] = 1;
-				exist[col2] = 1;
-				exist[col3] = 1;
-				exist[col4] = 1;
 			}
 		}
 	}
@@ -55,6 +49,7 @@ void Sudoku::solve(){
 	{
 		for(int j=0;j<9;j++)
 		{
+			if(exist[i][j] == 1) continue;
 			for(int k=1;k<=9;k++)
 			{
 			   row = (i*9+j)*9 + k;
@@ -62,11 +57,6 @@ void Sudoku::solve(){
                col2 = 9*9 + i*9 + k; 
                col3 = 9*9*2 + j*9 + k;
                col4 = 9*9*3 + ((i/3)*3+(j/3))*9 + k;
-			   //若為題目給的確定值，這一格不須插入1~9的'1'節點
-			   if((exist[col1]||exist[col2]||exist[col3]||exist[col4]))
-			   {
-				   continue;
-			   }
 			   insert(row, col1, col2, col3, col4);
 			}
 		}

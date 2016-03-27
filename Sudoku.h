@@ -15,7 +15,7 @@ class Sudoku{
     int flag; //判斷是否有多組解
 	int size;
 	int rowof[9*9*9*9*9*4+100]; //紀錄屬於哪一列
-	int exist[9*9*9+10]; //紀錄input題目已確定的數字位置
+	int exist[9][9]; //紀錄input題目已確定的數字位置
 	struct DLX_node{
 		int U,D,L,R; //上下左右指標 
 		int num; //num存該column object中有多少個 1
