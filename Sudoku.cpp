@@ -241,7 +241,7 @@ void Sudoku::transform(){
  * private member function
  */
 
-void Sudoku::initialization(){
+inline void Sudoku::initialization(){
 	head = 0;
 	flag = 0; //初始化為無解
 	for(int i=0; i<=9*9*4; i++) //初始化column object的dlx node
@@ -257,7 +257,7 @@ void Sudoku::initialization(){
 	return;
 }
 
-void Sudoku::remove(int col){
+inline void Sudoku::remove(int col){
 	/*
 	 * 把選定的column object(編號col)移除
 	 * 結構是以雙向鏈結儲存，將右邊的指標指向左邊
@@ -289,7 +289,7 @@ void Sudoku::remove(int col){
 }
 
 
-void Sudoku::resume(int col){
+inline void Sudoku::resume(int col){
 	/*
 	 * 之前雖然被暫時移除了，但其上下左右指標仍存在
 	 * 先指向其上方的'1'節點
