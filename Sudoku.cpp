@@ -320,12 +320,12 @@ void Sudoku::resume(int col){
 }
 
 int Sudoku::dfs(int time){ 
-	if(flag>1) return 2; //多組解直接回傳到最上層結束
 	if(dlx[head].R == head)   	
 	{
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
-	    flag++; //有解將flag+1;
+		if(flag>1) return 2;
+		flag++; //有解將flag+1
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
@@ -361,6 +361,7 @@ int Sudoku::dfs(int time){
 		}
 		//移除完不能被選擇的選項了
 		dfs(time+1); //繼續往下做下一次的dfs
+		if(flag>1) return 2;
 		//若其中一層false，則為選錯column object
 		j = dlx[i].L;
 		while(j != i)
