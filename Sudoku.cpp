@@ -319,19 +319,19 @@ inline void Sudoku::resume(int col){
 	return;
 }
 
-int Sudoku::dfs(int time){ 
+void Sudoku::dfs(int time){ 
 	if(dlx[head].R == head)   	
 	{
 	//開頭向右指標指回開頭，表示已經沒有column object可以選擇
 	//也就是已經都成功的選擇，即已有解
-		if(flag>1) return 2;
+		if(flag>1) return;
 		flag++; //有解將flag+1
 		for(int i=0; i<time; i++)
 	    {
 		    //將所紀錄之ans[]位置還原
 		    output[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
 		}
-		return 1;
+		return;
 	}
 	//以下便為尚有column object可以選擇的情況
 	int col;
@@ -361,7 +361,7 @@ int Sudoku::dfs(int time){
 		}
 		//移除完不能被選擇的選項了
 		dfs(time+1); //繼續往下做下一次的dfs
-		if(flag>1) return 2;
+		if(flag>1) return;
 		//若其中一層false，則為選錯column object
 		j = dlx[i].L;
 		while(j != i)
@@ -372,7 +372,7 @@ int Sudoku::dfs(int time){
 		i = dlx[i].D;
 	}
 	resume(col); //把這個選錯的column object回復回來
-	return 0; //傳回上層失敗，跳回上層繼續往下一個試
+	return; //傳回上層失敗，跳回上層繼續往下一個試
     //直到最外層也傳回失敗表示無解
 }
 

@@ -28,6 +28,6 @@ class Sudoku{
 	void initialization();
     void remove(int col);
 	void resume(int col);
-	int dfs(int time); //成功傳回1，失敗傳回0，已有多組解傳回2
+	void dfs(int time); 
 	void insert(int row, int col1, int col2, int col3, int col4); //插入稀疏矩陣'1'節點
 };  
