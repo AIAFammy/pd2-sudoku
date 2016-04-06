@@ -24,8 +24,6 @@ class Sudoku{
 	DLX_node dlx[9*9*9*9*9*4+100]; //所有0-1矩陣節點
     int head; //指向整個矩陣的開頭 
 	int ans[500];
-	int output[81];
-	void initialization();
     void remove(int col);
 	void resume(int col);
 	void dfs(int time); 

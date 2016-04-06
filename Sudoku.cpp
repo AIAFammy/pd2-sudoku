@@ -4,7 +4,7 @@
 #include"Sudoku.h"
 
 void Sudoku::giveQuestion(){
-	printf("0 0 0 0 0 5 0 2 0\n");
+	printf("0 0 0 0 0 0 0 2 0\n");
 	printf("1 0 0 9 0 0 0 0 0\n");
 	printf("4 0 0 0 0 0 0 0 0\n");
 	printf("0 0 8 0 0 2 0 0 0\n");
@@ -25,7 +25,23 @@ void Sudoku::readIn(){
 
 void Sudoku::solve(){
 	int row,col1,col2,col3,col4;
-	initialization(); //初始化矩陣
+	int correct[81];
+	int countcor;
+	countcor = 0;
+	
+	head = 0;
+	flag = 0; //初始化為無解
+	for(int i=0; i<=9*9*4; ++i) //初始化column object的dlx node
+	{
+		dlx[i].num = 0; //1的個數初始化為0
+	    dlx[i].U = i; //column object的上下指標初始化指回自己
+		dlx[i].D = i;
+		dlx[i].R = i+1;//column object的左右指標串起來
+		dlx[i].L = i-1;
+	}
+	size = 9*9*4; //記錄前9*9*4的interger為column object使用
+	dlx[9*9*4].R = 0; //最後面的指標拉回指向head
+
 	for(int i=0,k=0;i<9;++i) //k為0~81之位置，i,j為k的對應列行值
 	{	
 		for(int j=0;j<9;++j,++k)
@@ -41,6 +57,7 @@ void Sudoku::solve(){
 				col4 = 9*9*3 + ((i/3)*3+(j/3))*9 + map[k]; //一個block只能出現一次
 				//再將其插入0-1矩陣中
 				insert(row, col1, col2, col3, col4);
+				correct[countcor++] = i*9+j+1;
 			}
 		}
 	}
@@ -61,6 +78,22 @@ void Sudoku::solve(){
 			}
 		}
 	}
+	for(int k=0;k<countcor;++k) 
+	{
+	    remove(correct[k]);
+	    int i = dlx[correct[k]].D; //i是移除後下方的'1'節點，去往左右找有'1'之節點做移除
+	    while(i != correct[k])
+	    {
+		    int j = dlx[i].R;
+		    while(j != i)
+	        {
+			    remove(dlx[j].colobj); //同一列有'1'之column object就不能選了
+			    j = dlx[j].R;
+		    }
+		    i = dlx[i].D;
+       	}
+	}
+
 	dfs(0);
 	if(flag==0) printf("0\n"); //無解
 	else if(flag>1) printf("2\n"); //多組解
@@ -69,7 +102,7 @@ void Sudoku::solve(){
 		printf("1\n");
 		for(int i=0; i<81; ++i)
 		{
-			printf("%d%c",output[i],(i+1)%9==0?'\n':' ');
+			printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
 		}
 	}
 
@@ -227,11 +260,11 @@ void Sudoku::flip(int n){
 
 void Sudoku::transform(){
 	srand(time(NULL));
-	//changeNum(rand()%9+1, rand()%9+1);
+	changeNum(rand()%9+1, rand()%9+1);
 	changeRow(rand()%3, rand()%3);
-	//changeCol(rand()%3, rand()%3);
-	//rotate(rand()%101);
-	//flip(rand()%2);
+	changeCol(rand()%3, rand()%3);
+	rotate(rand()%101);
+	flip(rand()%2);
     for(int i=0;i<81;++i)  printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
     return;
 }
@@ -239,22 +272,6 @@ void Sudoku::transform(){
 /*
  * private member function
  */
-
-inline void Sudoku::initialization(){
-	head = 0;
-	flag = 0; //初始化為無解
-	for(int i=0; i<=9*9*4; ++i) //初始化column object的dlx node
-	{
-		dlx[i].num = 0; //1的個數初始化為0
-		dlx[i].U = i; //column object的上下指標初始化指回自己
-		dlx[i].D = i;
-		dlx[i].R = i+1;//column object的左右指標串起來
-		dlx[i].L = i-1;
-	}
-	size = 9*9*4; //記錄前9*9*4的interger為column object使用
-	dlx[9*9*4].R = 0; //最後面的指標拉回指向head
-	return;
-}
 
 inline void Sudoku::remove(int col){
 	/*
@@ -328,7 +345,7 @@ void Sudoku::dfs(int time){
 		for(int i=0; i<time; ++i)
 	    {
 		    //將所紀錄之ans[]位置還原
-		    output[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
+		    map[(rowof[ans[i]]-1)/9] = (rowof[ans[i]])%9==0?9:(rowof[ans[i]])%9;
 		}
 		return;
 	}
