@@ -78,6 +78,8 @@ void Sudoku::solve(){
 			}
 		}
 	}
+	if(countcor<30)
+	{
 	for(int k=0;k<countcor;++k) 
 	{
 	    remove(correct[k]);
@@ -93,7 +95,7 @@ void Sudoku::solve(){
 		    i = dlx[i].D;
        	}
 	}
-
+	}
 	dfs(0);
 	if(flag==0) printf("0\n"); //無解
 	else if(flag>1) printf("2\n"); //多組解
