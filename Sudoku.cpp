@@ -78,7 +78,7 @@ void Sudoku::solve(){
 			}
 		}
 	}
-	if(countcor<30)
+	if(countcor<30&&countcor>15)
 	{
 	for(int k=0;k<countcor;++k) 
 	{
